@@ -4,21 +4,24 @@ using Bulky.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 
-// Erstelle Builder-Objekt für die Konfiguration der Anwendung
+// Erstelle Builder-Objekt fï¿½r die Konfiguration der Anwendung
 var builder = WebApplication.CreateBuilder(args);
 
-// Füge MVC-Service und Datenbank-Kontext in den DI-Container ein
+// Fï¿½ge MVC-Service und Datenbank-Kontext in den DI-Container ein
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
 // Erstelle das WebApplication-Objekt
 var app = builder.Build();
 
-// Konfiguriere Fehlerbehandlung und Sicherheit für Produktionsumgebung
+// Konfiguriere Fehlerbehandlung und Sicherheit fï¿½r Produktionsumgebung
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -32,7 +35,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
-// Definiere Standardroute für Controller und Actions
+// Definiere Standardroute fï¿½r Controller und Actions
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");

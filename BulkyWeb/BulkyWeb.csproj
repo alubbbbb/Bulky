@@ -1,29 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>YOUR-SECRETS-ID</UserSecretsId>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>e265e2d9-e245-45dd-9818-a134ac36a28d</UserSecretsId>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
-  </ItemGroup>
+		<!-- Tools NUR zur Designzeit (keine Veröffentlichung) -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Bulky.DataAccess1\Bulky.DataAccess.csproj" />
-    <ProjectReference Include="..\Bulky.Models\Bulky.Models.csproj" />
-  </ItemGroup>
+		<!-- WICHTIG für Scaffolding: direkte Referenz im Web-Projekt -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\products\" />
-  </ItemGroup>
+		<!-- Visual Studio Codegenerator für .NET 8 -->
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Bulky.DataAccess\Bulky.DataAccess.csproj" />
+	  <ProjectReference Include="..\Bulky.Models\Bulky.Models.csproj" />
+	</ItemGroup>
 </Project>

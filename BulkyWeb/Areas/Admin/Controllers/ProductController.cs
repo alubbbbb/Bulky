@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Bulky.DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Bulky.Models.ViewModels;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
@@ -83,6 +83,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 else
                 {
                     _unitOfWork.Product.Update(productVM.Product);
+
                 }
                 _unitOfWork.Save();
                 TempData["success"] = "Product created succesfully";
@@ -106,6 +107,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 return Json(new { data = productList });
             }
         #endregion
+
         #region API CALLS
         [HttpDelete]
         public IActionResult Delete(int? id)

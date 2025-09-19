@@ -30,7 +30,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
             Product product = _unitOfWork.Product.Get(u=> u.Id == productId, includeProperties: "Category");
             return View(product);
         }
-
+ 
         // Action für die Datenschutzerklärung
         public IActionResult Privacy()
         {

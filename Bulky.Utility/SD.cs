@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bulky.Utility
+namespace Bulky.Utility1
 {
-    public static class SD
+    internal class SD
     {
     }
 }

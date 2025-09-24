@@ -50,6 +50,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 if (CompanyObj.Id == 0)
                 {
                     _unitOfWork.Company.Add(CompanyObj);
+                   
                 }
                 else
                 {

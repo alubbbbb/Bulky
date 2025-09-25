@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Bulky.Models
+{
+    public class ShoppingCartVM
+    {
+        public IEnumerable<ShoppingCart> ShoppingcartList { get; set; }
+        public double OrderTotal { get; set; }
+        public ApplicationUser ApplicationUser { get;set; }
+    }
+}

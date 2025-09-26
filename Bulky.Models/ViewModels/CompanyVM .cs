@@ -13,5 +13,6 @@ namespace Bulky.Models.ViewModels
         public Company Company { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> CompanyList { get; set; }
+
     }
 }

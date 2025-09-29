@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Bulky.DataAccess.Repository.IRepository;
+﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
+using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 namespace BulkyWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+   
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -21,10 +23,30 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         #region API CALLS
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(string status)
         {
-            List<OrderHeader> OrderHeaderList = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
-            return Json(new { data = OrderHeaderList });
+            IEnumerable<OrderHeader> objHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+
+            switch (status)
+            {
+                case "pending":
+                    objHeaders = objHeaders.Where(u => u.PaymentStatus == SD.PaymentStatusDelayedPayment);
+                    break;
+                case "inprocess":
+                    objHeaders = objHeaders.Where(u => u.OrderStatus == SD.StatusInProcess);
+                    break;
+                case "completed":
+                    objHeaders = objHeaders.Where(u => u.OrderStatus == SD.StatusShipped);
+                    break;
+                case "approved":
+                    objHeaders = objHeaders.Where(u => u.OrderStatus == SD.StatusApproved);
+                    break;
+                default:
+                    break;
+            }
+
+
+            return Json(new { data = objHeaders});
         }
         #endregion
 

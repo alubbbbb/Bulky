@@ -13,6 +13,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        [BindProperty]
+        public OrderVM OrderVM { get; set; }
         public OrderController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -24,13 +26,36 @@ namespace BulkyWeb.Areas.Admin.Controllers
         public IActionResult Details(int orderId)
         {
             // Fix: Nicht anonymen Typ erstellen, sondern eine Instanz von OrderVM.
-            OrderVM orderVm = new()
+            OrderVM = new()
             {
                 OrderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == orderId, includeProperties: "ApplicationUser"),
                 OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderHeaderId == orderId, includeProperties: "Product")
             };
 
-            return View(orderVm);
+            return View(OrderVM);
+        }
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        public IActionResult UpdateOrderDetail(int orderId)
+        {
+            // Fix: Nicht anonymen Typ erstellen, sondern eine Instanz von OrderVM.
+            var orderHeaderFromDb = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+            orderHeaderFromDb.Name = OrderVM.OrderHeader.Name;
+            orderHeaderFromDb.PhoneNumber = OrderVM.OrderHeader.PhoneNumber;
+            orderHeaderFromDb.StreetAddress = OrderVM.OrderHeader.StreetAddress;
+            orderHeaderFromDb.City = OrderVM.OrderHeader.City;
+            orderHeaderFromDb.State = OrderVM.OrderHeader.State;
+            orderHeaderFromDb.PostalCode = OrderVM.OrderHeader.PostalCode;
+            if (OrderVM.OrderHeader.Carrier != null)
+            {
+                orderHeaderFromDb.Carrier = OrderVM.OrderHeader.Carrier;
+            }
+            _unitOfWork.OrderHeader.Update(orderHeaderFromDb);
+            _unitOfWork.Save();
+
+            TempData["success"] = "Order Details Updated Successfully.";
+
+            return RedirectToAction(nameof(Details),new { orderId = orderId });
         }
 
         #region API CALLS

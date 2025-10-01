@@ -117,8 +117,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             // Fix: Nicht anonymen Typ erstellen, sondern eine Instanz von Or
             // derVM.
-            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
-            return RedirectToAction(nameof(PaymentConfirmation), new { orderId = orderHeader.Id });
+            return View();
 
         }
 

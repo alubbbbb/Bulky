@@ -222,7 +222,7 @@
                             </ul>
                             @if(Model.OrderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment && Model.OrderHeader.OrderStatus == SD.StatusShipped)
                             {
-                                <button type="submit" asp-action="PaymentConfirmation" asp-area="Admin" class="btn btn-success form-control my-1">Pay now</button>
+                                <button type="submit" asp-action="PaymentConfirmation" asp-area="Admin" asp-controller="Order" asp-route-orderId="@Model.OrderHeader.Id" class="btn btn-success form-control my-1">Pay now</button>
                             }
                             @if(User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                             {

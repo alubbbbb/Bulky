@@ -140,7 +140,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
         }
         public IActionResult Plus(int cardId)
         {
-            ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cardId);
+            ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cardId); 
             shoppingCart.Count += 1;
             _unitOfWork.ShoppingCart.Update(shoppingCart);
             _unitOfWork.Save();

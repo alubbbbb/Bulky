@@ -1,6 +1,7 @@
 ﻿using Bulky.DataAccess.Data;
 using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,10 @@ namespace Bulky.DataAccess.Repository
             _db.SaveChanges();
 
         }
-
+        public void UpdateStatus(int id, string? status)
+        {
+            _db.OrderHeaders.FirstOrDefault(u => u.Id == id).OrderStatus = status;
+            _db.SaveChanges();;
+        }
     }
 }

@@ -151,6 +151,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
             ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cardId);
             _unitOfWork.ShoppingCart.Remove(shoppingCart);
             _unitOfWork.Save();
+            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.Id == cardId).ToList().Count);
             return RedirectToAction(nameof(Index));
         }
 

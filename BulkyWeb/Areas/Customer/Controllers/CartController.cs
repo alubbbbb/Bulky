@@ -119,9 +119,11 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
         public IActionResult OrderConfirmation(int id)
         {
+            HttpContext.Session.Clear();
+
             return View(id);
         }
-        
+         
         public IActionResult Minus(int cardId)
         {
             ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cardId, tracked: true);

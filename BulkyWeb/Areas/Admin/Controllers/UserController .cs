@@ -24,34 +24,49 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             return View();
         }
-        
+
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll()
-            {
+        {
             List<ApplicationUser> objUserList = _db.ApplicationUsers.Include(u => u.Company).ToList();
 
-            foreach(var user in objUserList)
+            var userRoles = _db.UserRoles.ToList();
+            var roles = _db.Roles.ToList();
+
+            foreach (var user in objUserList)
             {
-                if(user.Company == null)
-                {
-                    user.Company = new()
-                    {
-                        Name = ""
-                    };
-                }
+
+                var roleId = userRoles.FirstOrDefault(u => u.UserId == user.Id).RoleId;
+                user.Role = roles.FirstOrDefault(u => u.Id == roleId).Name;
             }
 
             return Json(new { data = objUserList });
-            }
+        }
         #endregion
 
         #region API CALLS
-        [HttpDelete]
-        public IActionResult Delete(int? id)
+        [HttpPost]
+        public IActionResult LockUnlock([FromBody] string id)
         {
-          
-            return Json(new { sucess = true, message = "Delete Successful" });
+            var objFromDb = _db.ApplicationUsers.FirstOrDefault(u => u.Id == id);
+            if(objFromDb == null)
+            {
+                return Json(new { sucess = false, message = "Error while Locking/Unlocking" });
+
+            }
+
+            if(objFromDb.LockoutEnd!= null && objFromDb.LockoutEnd > DateTime.Now)
+            {
+                objFromDb.LockoutEnd = DateTime.Now;
+            }
+            else
+            {
+                objFromDb.LockoutEnd = DateTime.Now.AddYears(1000);
+            }
+            _db.SaveChanges();
+
+                return Json(new { sucess = true, message = "Delete Successful" });
 
         }
         #endregion

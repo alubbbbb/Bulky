@@ -119,12 +119,14 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
         public IActionResult OrderConfirmation(int id)
         {
+            HttpContext.Session.Clear();
+
             return View(id);
         }
-        
+         
         public IActionResult Minus(int cardId)
         {
-            ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cardId);
+            ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cardId, tracked: true);
             if(shoppingCart.Count <= 1)
             {
                 _unitOfWork.ShoppingCart.Remove(shoppingCart);
@@ -148,9 +150,13 @@ namespace BulkyWeb.Areas.Customer.Controllers
         }
         public IActionResult Remove(int cardId)
         {
-            ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cardId);
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.Get(u => u.Id == cardId,tracked:true);
             _unitOfWork.ShoppingCart.Remove(shoppingCart);
             _unitOfWork.Save();
+            HttpContext    .Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).ToList().Count);
             return RedirectToAction(nameof(Index));
         }
 

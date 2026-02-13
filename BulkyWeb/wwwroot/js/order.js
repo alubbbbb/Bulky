@@ -1,31 +1,18 @@
 ﻿var dataTable;
+var status = ""; // Status-Variable definieren
+
 $(document).ready(function () {
-    var url = window.location.search;
-    if (url.includes("inprocess")) {
-        loadDataTable("inprocess");
-    } else {
-        if (url.includes("pending")) {
-            loadDataTable("pending");
-        } else {
-            if (url.includes("completed")) {
-                loadDataTable("completed");
-            } else {
-                if (url.includes("approved")) {
-                    loadDataTable("approved");
-                } else {
-                    loadDataTable("all");
-                }
-            }
-        }
-    }
+    loadDataTable();
 });
 
-function loadDataTable(status) {
-    if ($.fn.DataTable.isDataTable('#tblData')) {
-        $('#tblData').DataTable().destroy();
-    }
+function loadDataTable() {
     dataTable = $('#tblData').DataTable({
-        "ajax": { url: '/admin/order/getall?status=' + status },
+        "ajax": {
+            url: '/admin/order/getall?status=' + status,
+            error: function (xhr, error, thrown) {
+                console.error('Fehler beim Laden der Daten:', error);
+            }
+        },
         "columns": [
             { data: 'id', width: "5%" },
             { data: 'name', width: "25%" },
@@ -41,7 +28,7 @@ function loadDataTable(status) {
                             <a href="/Admin/order/details?orderId=${data}" class="btn btn-primary mx-2">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                           
+                        </div>
                     `;
                 },
                 width: "10%"
@@ -49,4 +36,5 @@ function loadDataTable(status) {
         ]
     });
 }
+
 
